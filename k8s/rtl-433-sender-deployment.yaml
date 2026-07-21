@@ -24,6 +24,14 @@ spec:
       # attached to this one node.
       nodeSelector:
         kubernetes.io/hostname: orangepizero3
+      # orangepizero3 is tainted dedicated=sdr:NoSchedule so nothing else
+      # lands on this resource-constrained node by accident; this toleration
+      # is what lets this pod (and only this pod) be scheduled there.
+      tolerations:
+      - key: dedicated
+        operator: Equal
+        value: sdr
+        effect: NoSchedule
       containers:
       - name: rtl-433-sender
         image: kregistry.siwko.org:5000/rtl-433-sender:latest

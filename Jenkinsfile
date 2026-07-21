@@ -19,6 +19,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                echo "=== apply node taint ==="
+                sh "kubectl apply -f k8s/node-taints.yaml"
                 sh "kubectl apply -f k8s/rtl-433-sender-deployment.yaml"
                 sh "kubectl rollout restart deployment/rtl-433-sender"
             }

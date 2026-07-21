@@ -1,0 +1,13 @@
+# orangepizero3 is resource-constrained and has the rtl_433 SDR USB dongle
+# physically attached to it. This taint keeps general workloads off of it;
+# only pods with a matching "dedicated=sdr:NoSchedule" toleration (currently
+# just rtl-433-sender) can be scheduled here.
+apiVersion: v1
+kind: Node
+metadata:
+  name: orangepizero3
+spec:
+  taints:
+  - key: dedicated
+    value: sdr
+    effect: NoSchedule
