@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtl-433-sender
+  namespace: default
+  labels:
+    app: rtl-433-sender
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rtl-433-sender
+  template:
+    metadata:
+      labels:
+        app: rtl-433-sender
+    spec:
+      # Pinned by hostname, not just arch: the SDR dongle is physically
+      # attached to this one node.
+      nodeSelector:
+        kubernetes.io/hostname: orangepizero3
+      containers:
+      - name: rtl-433-sender
+        image: kregistry.siwko.org:5000/rtl-433-sender:latest
+        imagePullPolicy: Always
+        env:
+        - name: MQTT_HOST
+          value: mosquitto.default.svc.cluster.local
+        - name: MQTT_PORT
+          value: "1883"
+        - name: MQTT_TOPIC_PREFIX
+          value: rtl_433
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: usb
+          mountPath: /dev/bus/usb
+      volumes:
+      - name: usb
+        hostPath:
+          path: /dev/bus/usb
