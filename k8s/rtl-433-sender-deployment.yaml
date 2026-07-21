@@ -7,6 +7,11 @@ metadata:
     app: rtl-433-sender
 spec:
   replicas: 1
+  # Only one pod can ever hold the SDR's USB interface, so the old pod must
+  # fully terminate (releasing the device) before the new one starts, or the
+  # new container fails with "usb_claim_interface error -6" (device busy).
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: rtl-433-sender
