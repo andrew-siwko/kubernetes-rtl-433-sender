@@ -10,5 +10,5 @@ ENV MQTT_TOPIC_PREFIX=rtl_433
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
+ENV PYTHONUNBUFFERED=1
 ENTRYPOINT ["/entrypoint.sh"]
